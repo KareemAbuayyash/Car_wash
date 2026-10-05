@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'register_page.dart';
+
 /// The initial login interface. Authentication will be connected to AuthCubit
 /// once the login flow is implemented.
 class LoginPage extends StatefulWidget {
@@ -25,8 +27,21 @@ class _LoginPageState extends State<LoginPage> {
   void _validateForm() {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState?.validate() ?? false) {
-      // Authentication will be delegated to AuthCubit here.
+      _showTemporaryMessage('Login will be connected to the backend soon');
     }
+  }
+
+  void _openRegisterPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const RegisterPage()),
+    );
+  }
+
+  void _showTemporaryMessage(String message) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    scaffoldMessenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   String? _validateEmail(String? value) {
@@ -140,23 +155,26 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 28),
-                    Text.rich(
-                      TextSpan(
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: const Color(0xFF607086),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account?",
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: const Color(0xFF607086),
+                          ),
                         ),
-                        children: const [
-                          TextSpan(text: "Don't have an account? "),
-                          TextSpan(
-                            text: 'Sign Up',
-                            style: TextStyle(
-                              color: primaryColor,
+                        TextButton(
+                          onPressed: _openRegisterPage,
+                          style: TextButton.styleFrom(
+                            foregroundColor: primaryColor,
+                            textStyle: const TextStyle(
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
+                          child: const Text('Sign Up'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
